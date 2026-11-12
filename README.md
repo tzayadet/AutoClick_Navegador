@@ -1,103 +1,49 @@
-# ⚡ Auto Load More
+<p align="center">
+  <img src="https://img.shields.io/badge/BROWSER_AUTOMATION-AUTO_LOAD_MORE-101010?style=for-the-badge&labelColor=050805&color=00FF41" alt="Auto Load More"/>
+  <img src="https://img.shields.io/badge/JAVASCRIPT-BOOKMARKLET_STYLE-101010?style=for-the-badge&logo=javascript&logoColor=00FF41" alt="JavaScript"/>
+</p>
 
-> *Automate the boring stuff, investigate the interesting stuff.*
+# Auto Load More
 
-Pequeño script JavaScript para automatizar el botón **`Cargar más`** en páginas web.
+Small JavaScript utility that automates a visible **Load more** button on a web page. It checks the page, triggers the button and waits for content to load before continuing.
 
-El script busca automáticamente el botón visible, simula la secuencia de eventos de ratón y espera unos segundos antes de volver a buscarlo.
+<p align="center">
+  <a href="https://github.com/tzayadet/AutoClick_Navegador"><strong>SOURCE CODE</strong></a>
+</p>
 
-En otras palabras:
+## How it works
 
-**Tú:** `Cargar más`
-**Script:** *"Ya lo hago yo."*
+- Finds visible elements whose text matches the configured button label.
+- Checks that the element is visible before interacting.
+- Simulates the mouse event sequence: `mousedown`, `mouseup` and `click`.
+- Waits between attempts.
+- Stops when the target button disappears or the configured stop condition is reached.
+- Reports click count and elapsed time.
 
----
+The repository also contains an improved iteration that checks for page changes, records timestamps and per-load duration, and stops when no new content is detected.
 
-## 🧠 ¿Qué hace?
+## Use it
 
-El proceso es bastante sencillo:
+1. Open the page you want to inspect.
+2. Open the browser developer tools.
+3. Select the Console tab.
+4. Paste the contents of `auto-load-more.js`.
+5. Press Enter and monitor the console output.
 
-```text
-┌──────────────────────────┐
-│ Buscar "Cargar más"      │
-└────────────┬─────────────┘
-             │
-             ▼
-      ¿Botón visible?
-        /         \
-      NO           SÍ
-      │             │
-      ▼             ▼
-    STOP      Simular click
-                    │
-                    ▼
-              Esperar 2.5s
-                    │
-                    └──────► Repetir
-```
+Use the script only on pages where automated interaction is permitted.
 
-El script:
+## Configuration
 
-* Busca elementos cuyo texto sea exactamente `Cargar más`.
-* Comprueba que sean visibles.
-* Obtiene las coordenadas del elemento.
-* Simula `mousedown`.
-* Simula `mouseup`.
-* Simula `click`.
-* Espera **2,5 segundos**.
-* Repite hasta que el botón desaparezca.
-
----
-
-## 🚀 Uso
-
-1. Abre la página donde quieras cargar más contenido.
-2. Abre las herramientas de desarrollador del navegador.
-3. Ve a la pestaña **Console**.
-4. Pega el contenido de `auto-load-more.js`.
-5. Pulsa `Enter`.
-6. Deja que haga su trabajo.
-
-Salida aproximada:
-
-```text
-Clic 1
-Clic 2
-Clic 3
-Clic 4
-Clic 5
-...
-No encuentro el botón "Cargar más".
-Proceso terminado. Total de clics: 42
-```
-
-42 clics.
-
-Porque obviamente necesitábamos automatizar exactamente eso.
-
----
-
-## ⚙️ Configuración
-
-Puedes modificar fácilmente estos valores:
+Adjust the values in the script:
 
 ```javascript
 const DELAY = 2500;
 const BUTTON_TEXT = 'Cargar más';
 ```
 
-Por ejemplo:
+For example, use `BUTTON_TEXT = 'Load more'` for an English interface or increase the delay to give slower pages time to update.
 
-```javascript
-const DELAY = 5000;
-const BUTTON_TEXT = 'Load more';
-```
-
-Así esperará 5 segundos entre clics y buscará `Load more`.
-
----
-
-## 🛠️ Estructura
+## Project layout
 
 ```text
 .
@@ -105,102 +51,21 @@ Así esperará 5 segundos entre clics y buscará `Load more`.
 └── README.md
 ```
 
-Pequeño. Directo. Sin 14 frameworks para pulsar un botón.
+## Limitations
 
----
+This is a small page-interaction helper, not a universal crawler. It may not work with Shadow DOM, iframes, unusual button structures, infinite scroll, anti-bot controls or pages that require framework-specific events.
 
-## 🔍 ¿Por qué simula los eventos?
+## Technology
 
-En lugar de limitarse a ejecutar una función arbitraria, el script reproduce la secuencia:
+- JavaScript
+- DOM APIs
+- Browser mouse events
+- Developer Tools Console
 
-```text
-mousedown
-   ↓
-mouseup
-   ↓
-click
-```
+## Scope
 
-utilizando las coordenadas reales del elemento.
+The script automates repetitive interaction with a page already open in the user's browser. It does not bypass authentication, access controls or anti-bot protections.
 
-Esto puede resultar útil en interfaces donde el comportamiento está asociado a eventos de ratón.
+## License
 
----
-
-### 🛡️ Safe Mode
-
-Es una versión más controlada para páginas donde la carga puede tardar más o no quieres que el script siga haciendo clic si algo se queda bloqueado.
-
-Además de lo anterior, comprueba si el contenido de la página realmente ha cambiado después del clic.
-
-También incluye:
-
-* Timeout de carga.
-* Límite máximo de clics.
-* Comprobación periódica del contenido.
-* Revisión del botón antes de hacer cada clic.
-* Registro con hora exacta.
-* Tiempo desde el inicio.
-* Tiempo que ha tardado cada carga.
-* Parada automática si no detecta cambios.
-* Resumen al terminar.
-
-La idea es evitar el típico:
-
-**clic → esperar 2,5 s → clic → esperar 2,5 s → clic**
-
-cuando la página en realidad todavía está cargando.
-
----
-
-## ⚠️ Limitaciones
-
-Este script no intenta ser un crawler universal ni pretende derrotar a Skynet.
-
-Está pensado para páginas relativamente sencillas donde:
-
-* El botón contiene exactamente `Cargar más`.
-* El botón está presente en el DOM.
-* El botón es visible.
-* La página carga contenido después del clic.
-* El contenido no requiere interacción adicional.
-
-Puede no funcionar correctamente si la página utiliza:
-
-* Shadow DOM.
-* Iframes.
-* Texto diferente.
-* Botones generados con estructuras poco convencionales.
-* Infinite scroll en lugar de botón.
-* Sistemas anti-bot.
-* Lógica que requiere eventos específicos del framework.
-
----
-
-## 🧪 Personalización
-
-Si la página utiliza otro texto:
-
-```javascript
-const BUTTON_TEXT = 'Ver más';
-```
-
-Si necesitas cambiar el intervalo:
-
-```javascript
-const DELAY = 1000;
-```
-
-Si quieres hacerlo más conservador:
-
-```javascript
-const DELAY = 5000;
-```
-
-La regla es sencilla:
-
-> **Más rápido no es necesariamente mejor aunque puede ser cuantiosamente mejor.**
-
-Deja que la página respire.
-
----
+See [LICENSE](LICENSE) for the repository's licensing terms.
